@@ -13,10 +13,9 @@ namespace FM_Silver
         private List<int> processID = new List<int>();
         StreamWriter fileWrite;
 
-
         private string processLog;
         
-        public WMIChecking(string log)
+        public WMIChecking(string log)//Конструктор класса
         {
             processLog = log;
             processStartEvent.EventArrived += new EventArrivedEventHandler(checkStartProcess);
@@ -26,17 +25,18 @@ namespace FM_Silver
 
         }
 
-        public void usableProcess(int process)
+        public void usableProcess(int process)//Передача ID запущенного процесса
         {
             processID.Add(process);
         }
-        public void setThredStatus(bool locks, string type)
+       
+        public void setThredStatus(bool locks, string type)//Передача статуса открытия всплывающего окна
         {
             this.locks = locks;
             this.type = type;
         }
 
-        private void checkStartProcess(object sender, EventArrivedEventArgs e)
+        private void checkStartProcess(object sender, EventArrivedEventArgs e)//Событие подключения устройства
         {
             if (processID.Contains(Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value)))
             {
@@ -53,15 +53,13 @@ namespace FM_Silver
                         MessageBox.Show("Ошибка: " + error);
                     }
                 }
-
                 if (locks == true && type == "Process")
                 {
                     writeInThread("[Запущен]-[" + getProcessOwner(Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value)) + "]-[" + e.NewEvent.Properties["ProcessName"].Value + "]-[" + DateTime.Now.ToString() + "]");
                 }
             }
         }
-        
-        private void checkStopProcess(object sender, EventArrivedEventArgs e)
+        private void checkStopProcess(object sender, EventArrivedEventArgs e)//Событие отключения устройства
         {
             if (processID.Contains(Convert.ToInt32(e.NewEvent.Properties["ProcessID"].Value)))
             {
@@ -88,12 +86,10 @@ namespace FM_Silver
                 }
             }
         }
-
-        public string getProcessOwner(int processID)
+        public string getProcessOwner(int processID)//Вывод пользователя процесса
         {
             ManagementObjectSearcher searcher = new ManagementObjectSearcher("Select * From Win32_Process Where ProcessID = " + processID);
             ManagementObjectCollection processList = searcher.Get();
-
             foreach (ManagementObject obj in processList)
             {
                 string[] argList = new string[] { string.Empty, string.Empty };
@@ -103,11 +99,10 @@ namespace FM_Silver
                     return argList[1] + "\\" + argList[0];
                 }
             }
-
             return "NO OWNER";
         }
 
-        public void writeInThread(string name)
+        public void writeInThread(string name)//Запись во всплывающее окно
         {
             NamedPipeServerStream pipeServerStream = new NamedPipeServerStream("testPipe", PipeDirection.Out);
             pipeServerStream.WaitForConnection();

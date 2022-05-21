@@ -61,10 +61,10 @@
             this.toolCMD = new System.Windows.Forms.ToolStripMenuItem();
             this.toolReadLogs = new System.Windows.Forms.ToolStripDropDownButton();
             this.toolProcessLog = new System.Windows.Forms.ToolStripMenuItem();
-            this.Test = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolCloseThread = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolDirectoryLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolWrokStaitLog = new System.Windows.Forms.ToolStripMenuItem();
-            this.toolProcessUserLog = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolCloseThread = new System.Windows.Forms.ToolStripMenuItem();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -92,15 +92,16 @@
             // 
             // listBox1
             // 
+            this.listBox1.AllowDrop = true;
             this.listBox1.FormattingEnabled = true;
             this.listBox1.ItemHeight = 15;
             this.listBox1.Location = new System.Drawing.Point(12, 70);
             this.listBox1.Name = "listBox1";
             this.listBox1.Size = new System.Drawing.Size(272, 379);
             this.listBox1.TabIndex = 7;
-            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             this.listBox1.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.LeftMouseDoubleClick_listBox1);
             this.listBox1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.MouseDown_listBox1);
+            this.listBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.listBox1_MouseUp);
             // 
             // contextMenuStrip1
             // 
@@ -263,7 +264,7 @@
             this.toolReadLogs});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(587, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(583, 25);
             this.toolStrip1.TabIndex = 15;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -332,10 +333,9 @@
             this.toolReadLogs.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.toolReadLogs.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolProcessLog,
-            this.Test,
-            this.toolCloseThread,
+            this.toolDirectoryLog,
             this.toolWrokStaitLog,
-            this.toolProcessUserLog});
+            this.toolCloseThread});
             this.toolReadLogs.Image = ((System.Drawing.Image)(resources.GetObject("toolReadLogs.Image")));
             this.toolReadLogs.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.toolReadLogs.Name = "toolReadLogs";
@@ -345,43 +345,40 @@
             // toolProcessLog
             // 
             this.toolProcessLog.Name = "toolProcessLog";
-            this.toolProcessLog.Size = new System.Drawing.Size(283, 22);
+            this.toolProcessLog.Size = new System.Drawing.Size(262, 22);
             this.toolProcessLog.Text = "Открыть лог процессов";
             this.toolProcessLog.Click += new System.EventHandler(this.openProcessLog);
             // 
-            // Test
+            // toolDirectoryLog
             // 
-            this.Test.Name = "Test";
-            this.Test.Size = new System.Drawing.Size(283, 22);
-            this.Test.Text = "Открыть лог директорий";
-            this.Test.Click += new System.EventHandler(this.openFilesLog);
-            // 
-            // toolCloseThread
-            // 
-            this.toolCloseThread.Name = "toolCloseThread";
-            this.toolCloseThread.Size = new System.Drawing.Size(283, 22);
-            this.toolCloseThread.Text = "Закрыть лог директорий";
-            this.toolCloseThread.Click += new System.EventHandler(this.closedThread);
+            this.toolDirectoryLog.Name = "toolDirectoryLog";
+            this.toolDirectoryLog.Size = new System.Drawing.Size(262, 22);
+            this.toolDirectoryLog.Text = "Открыть лог директорий";
+            this.toolDirectoryLog.Click += new System.EventHandler(this.openFilesLog);
             // 
             // toolWrokStaitLog
             // 
             this.toolWrokStaitLog.Name = "toolWrokStaitLog";
-            this.toolWrokStaitLog.Size = new System.Drawing.Size(283, 22);
+            this.toolWrokStaitLog.Size = new System.Drawing.Size(262, 22);
             this.toolWrokStaitLog.Text = "Открыть лог рабочего множества";
             this.toolWrokStaitLog.Click += new System.EventHandler(this.openWorkStaitLog);
             // 
-            // toolProcessUserLog
+            // toolCloseThread
             // 
-            this.toolProcessUserLog.Name = "toolProcessUserLog";
-            this.toolProcessUserLog.Size = new System.Drawing.Size(283, 22);
-            this.toolProcessUserLog.Text = "Открыть лог пользователей процесса";
-            this.toolProcessUserLog.Click += new System.EventHandler(this.openUserLog);
+            this.toolCloseThread.Name = "toolCloseThread";
+            this.toolCloseThread.Size = new System.Drawing.Size(262, 22);
+            this.toolCloseThread.Text = "Закрыть лог";
+            this.toolCloseThread.Click += new System.EventHandler(this.closedThread);
+            // 
+            // timer1
+            // 
+            this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(587, 453);
+            this.ClientSize = new System.Drawing.Size(583, 453);
             this.Controls.Add(this.toolStrip1);
             this.Controls.Add(this.listBox2);
             this.Controls.Add(this.button3);
@@ -392,8 +389,8 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.KeyPreview = true;
             this.Name = "Form1";
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.closedEvent);
             this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.startContextTools);
-            this.FormClosed += new FormClosedEventHandler(this.closedEvent);
             this.contextMenuStrip1.ResumeLayout(false);
             this.toolStrip1.ResumeLayout(false);
             this.toolStrip1.PerformLayout();
@@ -434,9 +431,9 @@
         private ToolStripMenuItem toolPowerPoint;
         private ToolStripDropDownButton toolReadLogs;
         private ToolStripMenuItem toolProcessLog;
-        private ToolStripMenuItem Test;
+        private ToolStripMenuItem toolDirectoryLog;
         private ToolStripMenuItem toolCloseThread;
         private ToolStripMenuItem toolWrokStaitLog;
-        private ToolStripMenuItem toolProcessUserLog;
+        private System.Windows.Forms.Timer timer1;
     }
 }

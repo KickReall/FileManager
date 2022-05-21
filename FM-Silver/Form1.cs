@@ -1,21 +1,22 @@
 using System.Diagnostics;
 using System.IO.Pipes;
-
 namespace FM_Silver
 {
     public partial class Form1 : Form
     {
-        
-        CheckDrivers drivers = new CheckDrivers();
-        CheckDirectory directory = new CheckDirectory();
-        WMIChecking processCheck;
-        string[] paths = new string[6]; //{0: путь к корзине 1: путь к справке 2: путь к логам процессов 4: путь к логам директорий 5: путь к логам файлов 6: путь к приложению}
-        string[] ccPaths = new string[2] { "", "" };//{0: путь к вырезаному объекту 1: путь к скопированному объекту}
-        bool[] cc = new bool[2] { false, false };//{0: статус вырезания 1: статус копирования}
-        string[] main = { "System", "FM-Silver", "Корзина", "Документы", "Изображения" };
 
+        CheckDrivers drivers = new CheckDrivers(); //создание экземпляра объекта, хранящего методы для взаимодействия с дисками
+        CheckDirectory directory = new CheckDirectory(); // создание экземпляра объекта, хранящего методы для взаимодействия с директориями и файлами.
+        WMIChecking processCheck; // создание объекта, хранящего методы для проверки информации о подключаемых и отключаемых устройствах.
+        string[] paths = new string[6]; //массив, хранящий пути к файлам папки Documentation
+        string[] ccPaths = new string[2] { "", "" };//массив хранящий пути к вырезаемым/копируемым файлам и папкам
+        bool[] cc = new bool[2] { false, false };//массив хранящий статутсы вырезания/копирования (true, false)
+        string[] main = { "System", "FM-Silver", "Корзина", "Документы", "Изображения" };//массив запрещённых имён папок и файлов
+
+        int time;
         bool locks = false;
         string type = "";
+
         public Form1()
         {
             InitializeComponent();
@@ -69,6 +70,16 @@ namespace FM_Silver
                             toolClear.Enabled = false;
                             toolPast.Enabled = false;
                             toolRename.Enabled = true;
+
+                            toolOpen.Visible = true;
+                            toolCut.Visible = true;
+                            toolCopy.Visible = true;
+                            toolDelete.Visible = true;
+                            toolPropertys.Visible = true;
+                            toolCreate.Visible = false;
+                            toolClear.Visible = false;
+                            toolPast.Visible = false;
+                            toolRename.Visible = true;
                         }
                         else
                         {
@@ -83,6 +94,16 @@ namespace FM_Silver
                                 toolClear.Enabled = false;
                                 toolPast.Enabled = false;
                                 toolRename.Enabled = false;
+
+                                toolOpen.Visible = true;
+                                toolCut.Visible = false;
+                                toolCopy.Visible = false;
+                                toolDelete.Visible = false;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = false;
+                                toolPast.Visible = false;
+                                toolRename.Visible = false;
                             }
                             else
                             {
@@ -95,6 +116,16 @@ namespace FM_Silver
                                 toolClear.Enabled = false;
                                 toolPast.Enabled = true;
                                 toolRename.Enabled = true;
+
+                                toolOpen.Visible = true;
+                                toolCut.Visible = true;
+                                toolCopy.Visible = true;
+                                toolDelete.Visible = true;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = false;
+                                toolPast.Visible = true;
+                                toolRename.Visible = true;
                             }
                         }
                     }
@@ -111,6 +142,16 @@ namespace FM_Silver
                             toolClear.Enabled = false;
                             toolPast.Enabled = false;
                             toolRename.Enabled = true;
+
+                            toolOpen.Visible = true;
+                            toolCut.Visible = true;
+                            toolCopy.Visible = true;
+                            toolDelete.Visible = true;
+                            toolPropertys.Visible = true;
+                            toolCreate.Visible = false;
+                            toolClear.Visible = false;
+                            toolPast.Visible = false;
+                            toolRename.Visible = true;
                         }
                         else
                         {
@@ -125,6 +166,16 @@ namespace FM_Silver
                                 toolClear.Enabled = false;
                                 toolPast.Enabled = false;
                                 toolRename.Enabled = false;
+
+                                toolOpen.Visible = true;
+                                toolCut.Visible = false;
+                                toolCopy.Visible = false;
+                                toolDelete.Visible = false;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = false;
+                                toolPast.Visible = false;
+                                toolRename.Visible = false;
                             }
                             else
                             {
@@ -137,6 +188,16 @@ namespace FM_Silver
                                 toolClear.Enabled = false;
                                 toolPast.Enabled = true;
                                 toolRename.Enabled = false;
+
+                                toolOpen.Visible = true;
+                                toolCut.Visible = true;
+                                toolCopy.Visible = true;
+                                toolDelete.Visible = true;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = false;
+                                toolPast.Visible = true;
+                                toolRename.Visible = false;
                             }
                         }
                     }
@@ -155,6 +216,16 @@ namespace FM_Silver
                                 toolClear.Enabled = false;
                                 toolPast.Enabled = false;
                                 toolRename.Enabled = false;
+
+                                toolOpen.Visible = false;
+                                toolCut.Visible = false;
+                                toolCopy.Visible = false;
+                                toolDelete.Visible = false;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = false;
+                                toolPast.Visible = false;
+                                toolRename.Visible = false;
                             }
                             else if (name == "Корзина")
                             {
@@ -167,6 +238,16 @@ namespace FM_Silver
                                 toolClear.Enabled = true;
                                 toolPast.Enabled = false;
                                 toolRename.Enabled = false;
+
+                                toolOpen.Visible = true;
+                                toolCut.Visible = false;
+                                toolCopy.Visible = false;
+                                toolDelete.Visible = false;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = true;
+                                toolPast.Visible = false;
+                                toolRename.Visible = false;
                             }
                             else
                             {
@@ -179,6 +260,16 @@ namespace FM_Silver
                                 toolClear.Enabled = false;
                                 toolPast.Enabled = false;
                                 toolRename.Enabled = false;
+
+                                toolOpen.Visible = true;
+                                toolCut.Visible = false;
+                                toolCopy.Visible = false;
+                                toolDelete.Visible = false;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = false;
+                                toolPast.Visible = false;
+                                toolRename.Visible = false;
                             }
                         }
                         else
@@ -194,6 +285,16 @@ namespace FM_Silver
                                 toolClear.Enabled = false;
                                 toolPast.Enabled = false;
                                 toolRename.Enabled = false;
+
+                                toolOpen.Visible = false;
+                                toolCut.Visible = false;
+                                toolCopy.Visible = false;
+                                toolDelete.Visible = false;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = false;
+                                toolPast.Visible = false;
+                                toolRename.Visible = false;
                             }
                             else if (name == "Корзина")
                             {
@@ -206,6 +307,16 @@ namespace FM_Silver
                                 toolClear.Enabled = true;
                                 toolPast.Enabled = true;
                                 toolRename.Enabled = false;
+
+                                toolOpen.Visible = true;
+                                toolCut.Visible = false;
+                                toolCopy.Visible = false;
+                                toolDelete.Visible = false;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = true;
+                                toolPast.Visible = true;
+                                toolRename.Visible = false;
                             }
                             else
                             {
@@ -218,6 +329,16 @@ namespace FM_Silver
                                 toolClear.Enabled = true;
                                 toolPast.Enabled = true;
                                 toolRename.Enabled = false;
+
+                                toolOpen.Visible = true;
+                                toolCut.Visible = false;
+                                toolCopy.Visible = false;
+                                toolDelete.Visible = false;
+                                toolPropertys.Visible = true;
+                                toolCreate.Visible = false;
+                                toolClear.Visible = true;
+                                toolPast.Visible = true;
+                                toolRename.Visible = false;
                             }
                         }
                     }
@@ -234,6 +355,16 @@ namespace FM_Silver
                             toolClear.Enabled = false;
                             toolPast.Enabled = false;
                             toolRename.Enabled = false;
+
+                            toolOpen.Visible = true;
+                            toolCut.Visible = false;
+                            toolCopy.Visible = false;
+                            toolDelete.Visible = false;
+                            toolPropertys.Visible = true;
+                            toolCreate.Visible = false;
+                            toolClear.Visible = false;
+                            toolPast.Visible = false;
+                            toolRename.Visible = false;
                         }
                         else
                         {
@@ -246,6 +377,16 @@ namespace FM_Silver
                             toolClear.Enabled = false;
                             toolPast.Enabled = true;
                             toolRename.Enabled = false;
+
+                            toolOpen.Visible = true;
+                            toolCut.Visible = false;
+                            toolCopy.Visible = false;
+                            toolDelete.Visible = false;
+                            toolPropertys.Visible = true;
+                            toolCreate.Visible = false;
+                            toolClear.Visible = false;
+                            toolPast.Visible = true;
+                            toolRename.Visible = false;
                         }
                     }
                     else
@@ -259,6 +400,16 @@ namespace FM_Silver
                         toolClear.Enabled = false;
                         toolPast.Enabled = false;
                         toolRename.Enabled = false;
+
+                        toolOpen.Visible = true;
+                        toolCut.Visible = false;
+                        toolCopy.Visible = false;
+                        toolDelete.Visible = false;
+                        toolPropertys.Visible = true;
+                        toolCreate.Visible = false;
+                        toolClear.Visible = false;
+                        toolPast.Visible = false;
+                        toolRename.Visible = false;
                     }
                 }
                 else
@@ -272,11 +423,20 @@ namespace FM_Silver
                     toolClear.Enabled = false;
                     toolPast.Enabled = false;
                     toolRename.Enabled = false;
+
+                    toolOpen.Visible = true;
+                    toolCut.Visible = false;
+                    toolCopy.Visible = false;
+                    toolDelete.Visible = false;
+                    toolPropertys.Visible = true;
+                    toolCreate.Visible = false;
+                    toolClear.Visible = false;
+                    toolPast.Visible = false;
+                    toolRename.Visible = false;
                 }
             }
             else
             {
-
                 if (name.Length < 3)
                 {
                     toolOpen.Enabled = false;
@@ -288,6 +448,16 @@ namespace FM_Silver
                     toolClear.Enabled = false;
                     toolPast.Enabled = false;
                     toolRename.Enabled = false;
+
+                    toolOpen.Visible = false;
+                    toolCut.Visible = false;
+                    toolCopy.Visible = false;
+                    toolDelete.Visible = false;
+                    toolPropertys.Visible = false;
+                    toolCreate.Visible = false;
+                    toolClear.Visible = false;
+                    toolPast.Visible = false;
+                    toolRename.Visible = false;
                 }
                 else if (name.Length == 3)
                 {
@@ -308,6 +478,21 @@ namespace FM_Silver
                         toolPowerPoint.Enabled = false;
                         toolRename.Enabled = false;
 
+                        toolOpen.Visible = false;
+                        toolCut.Visible = false;
+                        toolCopy.Visible = false;
+                        toolDelete.Visible = false;
+                        toolPropertys.Visible = true;
+                        toolCreate.Visible = true;
+                        toolClear.Visible = false;
+                        toolPast.Visible = false;
+                        toolDirectory.Visible = true;
+                        toolText.Visible = false;
+                        toolWord.Visible = false;
+                        toolExcel.Visible = false;
+                        toolPowerPoint.Visible = false;
+                        toolRename.Visible = false;
+
                     }
                     else
                     {
@@ -327,6 +512,21 @@ namespace FM_Silver
                             toolExcel.Enabled = false;
                             toolPowerPoint.Enabled = false;
                             toolRename.Enabled = false;
+
+                            toolOpen.Visible = false;
+                            toolCut.Visible = false;
+                            toolCopy.Visible = false;
+                            toolDelete.Visible = false;
+                            toolPropertys.Visible = true;
+                            toolCreate.Visible = true;
+                            toolClear.Visible = false;
+                            toolPast.Visible = true;
+                            toolDirectory.Visible = true;
+                            toolText.Visible = false;
+                            toolWord.Visible = false;
+                            toolExcel.Visible = false;
+                            toolPowerPoint.Visible = false;
+                            toolRename.Visible = false;
                         }
                         else
                         {
@@ -344,6 +544,21 @@ namespace FM_Silver
                             toolExcel.Enabled = false;
                             toolPowerPoint.Enabled = false;
                             toolRename.Enabled = false;
+
+                            toolOpen.Visible = false;
+                            toolCut.Visible = false;
+                            toolCopy.Visible = false;
+                            toolDelete.Visible = false;
+                            toolPropertys.Visible = true;
+                            toolCreate.Visible = true;
+                            toolClear.Visible = false;
+                            toolPast.Visible = false;
+                            toolDirectory.Visible = true;
+                            toolText.Visible = false;
+                            toolWord.Visible = false;
+                            toolExcel.Visible = false;
+                            toolPowerPoint.Visible = false;
+                            toolRename.Visible = false;
                         }
                     }
                 }
@@ -366,6 +581,21 @@ namespace FM_Silver
                         toolPowerPoint.Enabled = true;
                         toolRename.Enabled = false;
 
+                        toolOpen.Visible = false;
+                        toolCut.Visible = false;
+                        toolCopy.Visible = false;
+                        toolDelete.Visible = false;
+                        toolPropertys.Visible = true;
+                        toolCreate.Visible = true;
+                        toolClear.Visible = false;
+                        toolPast.Visible = false;
+                        toolDirectory.Visible = true;
+                        toolText.Visible = true;
+                        toolWord.Visible = true;
+                        toolExcel.Visible = true;
+                        toolPowerPoint.Visible = true;
+                        toolRename.Visible = false;
+
                     }
                     else
                     {
@@ -386,6 +616,21 @@ namespace FM_Silver
                             toolExcel.Enabled = true;
                             toolPowerPoint.Enabled = true;
                             toolRename.Enabled = false;
+
+                            toolOpen.Visible = false;
+                            toolCut.Visible = false;
+                            toolCopy.Visible = false;
+                            toolDelete.Visible = false;
+                            toolPropertys.Visible = true;
+                            toolCreate.Visible = true;
+                            toolClear.Visible = false;
+                            toolPast.Visible = true;
+                            toolDirectory.Visible = true;
+                            toolText.Visible = true;
+                            toolWord.Visible = true;
+                            toolExcel.Visible = true;
+                            toolPowerPoint.Visible = true;
+                            toolRename.Visible = false;
                         }
                         else
                         {
@@ -403,6 +648,21 @@ namespace FM_Silver
                             toolExcel.Enabled = true;
                             toolPowerPoint.Enabled = true;
                             toolRename.Enabled = false;
+
+                            toolOpen.Visible = false;
+                            toolCut.Visible = false;
+                            toolCopy.Visible = false;
+                            toolDelete.Visible = false;
+                            toolPropertys.Visible = true;
+                            toolCreate.Visible = true;
+                            toolClear.Visible = false;
+                            toolPast.Visible = false;
+                            toolDirectory.Visible = true;
+                            toolText.Visible = true;
+                            toolWord.Visible = true;
+                            toolExcel.Visible = true;
+                            toolPowerPoint.Visible = true;
+                            toolRename.Visible = false;
                         }
                     }
                 }
@@ -516,7 +776,6 @@ namespace FM_Silver
                 }
                 if (paths[5] != null)
                 {
-                    MessageBox.Show(paths[5]);
                     break;
                 }
             }
@@ -554,19 +813,15 @@ namespace FM_Silver
 
                 UseShellExecute = true
             };
-
+            
             start.Start();
+            processCheck.usableProcess(start.Id);
 
-            if (locks == true && type == "Process")
-            {
-                processCheck.setThredStatus(locks, type);
-            }
             if (locks == true && type == "WorkStait")
             {
                 writeInThread("[Имя] - [" + start.ProcessName + "] - [Размер множества] - [" + start.WorkingSet + "]");
             }
-            processCheck.usableProcess(start.Id);
-
+            
         }
 
         //
@@ -638,16 +893,8 @@ namespace FM_Silver
         }
         public void Copy()
         {
-            if (directory.getType(directory.getPath(listBox1.SelectedItem.ToString())) == "File")
-            {
-                cc[1] = true;
-                ccPaths[1] = directory.getPath(listBox1.SelectedItem.ToString());
-            }
-            else
-            {
-                cc[0] = true;
-                ccPaths[0] = directory.getPath(listBox1.SelectedItem.ToString());
-            }
+            cc[1] = true;
+            ccPaths[1] = directory.getPath(listBox1.SelectedItem.ToString());
         }
         public void Create(string name, int i)
         {
@@ -656,7 +903,6 @@ namespace FM_Silver
         }
         public void Delete()
         {
-
             if (textBox1.Text != paths[0])
             {
                 DialogResult res = MessageBox.Show("Полностью удалить файл " + listBox1.SelectedItem.ToString() + "?", "Удаление объекта.", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
@@ -747,7 +993,7 @@ namespace FM_Silver
 
         //
         //Проверка действий  из событий.
-        //
+        //D
 
         public void checkToolProcess(string name)
         {
@@ -763,7 +1009,7 @@ namespace FM_Silver
                     processStart("cmd");
                     break;
                 case "toolAbout":
-                    MessageBox.Show("О программе.");
+                    MessageBox.Show("Предмет: Операционные системы и оболчки.\nЯзык программирования: C#.\nСтудент: Симонов Кирилл Олегович.\nГруппа: РПИС-03.");
                     break;
                 case "toolReference":
                     processStart(paths[1]);
@@ -810,19 +1056,6 @@ namespace FM_Silver
         //
         //Методы событий при действиях ползователя.
         //
-
-        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (listBox1.SelectedIndex != -1)
-            {
-                setParametrs(listBox1.SelectedItem.ToString(), listBox1.SelectedIndex, textBox1.Text);
-            }
-            else
-            {
-                listBox1.ClearSelected();
-                setParametrs(textBox1.Text, listBox1.SelectedIndex, textBox1.Text);
-            }
-        }
         private void LeftMouseDoubleClick_listBox1(object sender, MouseEventArgs e)
         {
             if (listBox1.IndexFromPoint(e.Location) != -1)
@@ -838,8 +1071,67 @@ namespace FM_Silver
         {
             if (e.Button == MouseButtons.Right)
             {
+                if (listBox1.IndexFromPoint(e.Location) != -1)
+                {
+                    listBox1.SelectedIndex = listBox1.IndexFromPoint(e.Location);
+                    setParametrs(listBox1.SelectedItem.ToString(), listBox1.SelectedIndex, textBox1.Text);
+                    contextMenuStrip1.Show(Control.MousePosition);
+                }
+                else
+                {
+                    listBox1.ClearSelected();
+                    setParametrs(textBox1.Text, listBox1.SelectedIndex, textBox1.Text);
+                    contextMenuStrip1.Show(Control.MousePosition);
+                }
+
+            }
+            else if (e.Button == MouseButtons.Left)
+            {
+                if (listBox1.IndexFromPoint(e.Location) != -1)
+                {
+                    listBox1.SelectedIndex = listBox1.IndexFromPoint(e.Location);
+                    setParametrs(listBox1.SelectedItem.ToString(), listBox1.SelectedIndex, textBox1.Text);
+                    if (toolCut.Enabled == true)
+                    {
+                        time = 0;
+                        timer1.Enabled = true;
+                    }
+                }
+                else
+                {
+                    listBox1.ClearSelected();
+                }
+            }
+        }
+        private void listBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            timer1.Enabled = false;
+            if (listBox1.IndexFromPoint(e.Location) != -1)
+            {
                 listBox1.SelectedIndex = listBox1.IndexFromPoint(e.Location);
-                contextMenuStrip1.Show(Control.MousePosition);
+                setParametrs(listBox1.SelectedItem.ToString(), listBox1.SelectedIndex, textBox1.Text);
+                if (cc[0] == true && toolPast.Enabled == true)
+                {
+                    checkClickToolAction(toolPast, EventArgs.Empty);
+                }
+            }
+            else
+            {
+                listBox1.ClearSelected();
+                setParametrs(textBox1.Text, listBox1.SelectedIndex, textBox1.Text);
+                if (cc[0] == true && toolPast.Enabled == true)
+                {
+                    checkClickToolAction(toolPast, EventArgs.Empty);
+                }
+            }
+        }
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            time += 1;
+            if (time == 2)
+            {
+                timer1.Enabled = false;
+                checkClickToolAction(toolCut, EventArgs.Empty);
             }
         }
         private void button3_Click(object sender, EventArgs e)
@@ -858,18 +1150,45 @@ namespace FM_Silver
         {
             if (!textBox1.Text.Contains("System"))
             {
-                updateListBox(textBox1.Text);
+                if (textBox1.Text.Length > 3)
+                {
+                    if (textBox1.Text.IndexOf("FM-")==3)
+                    {
+                        updateListBox(textBox1.Text);
+                    }
+                    else
+                    {
+                        Start();
+                    }
+                }
+                else
+                {
+                    updateListBox(textBox1.Text);
+                }
             }
         }
         private void startContextTools(object sender, KeyEventArgs e)
         {
-            foreach (ToolStripMenuItem toolsKeys in contextMenuStrip1.Items)
+            if (e.KeyData == Keys.Enter)
             {
-                if (e.KeyData == toolsKeys.ShortcutKeys)
+                if (listBox1.SelectedIndex != -1)
                 {
-                    if (toolsKeys.Enabled == true)
+                    checkClickToolAction(toolOpen, EventArgs.Empty);
+                }
+            }
+            else if (e.KeyData == Keys.Left)
+            {
+                button3_Click(sender, EventArgs.Empty);
+            }
+            else {
+                foreach (ToolStripMenuItem toolsKeys in contextMenuStrip1.Items)
+                {
+                    if (e.KeyData == toolsKeys.ShortcutKeys)
                     {
-                        checkClickToolAction(toolsKeys, EventArgs.Empty);
+                        if (toolsKeys.Enabled == true)
+                        {
+                            checkClickToolAction(toolsKeys, EventArgs.Empty);
+                        }
                     }
                 }
             }
@@ -898,7 +1217,6 @@ namespace FM_Silver
         //
         //Переопределение метода WndProc - обработчик сообщений Windows, для проверки дисков.
         //
-
         protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
@@ -931,64 +1249,58 @@ namespace FM_Silver
 
 
         }
-
-
         //
         //Передача данных между приложениями.
         //
         private void openFilesLog(object sender, EventArgs e)
         {
-            if (locks == false&&type=="")
+            if (locks == false && type == "")
             {
-                processStart(paths[5]);
+
+                
                 locks = true;
                 type = "Directory";
+                processStart(paths[5]);
+
             }
         }
-
         private void closedThread(object sender, EventArgs e)
         {
-            if (locks == true&&type!="")
+            if (locks == true && type != "")
             {
                 locks = false;
                 type = "";
+                processCheck.setThredStatus(false, "");
                 writeInThread("Close");
 
             }
 
         }
-
         private void openProcessLog(object sender, EventArgs e)
         {
             if (locks == false && type == "")
             {
-                processStart(paths[5]);
+                
                 locks = true;
                 type = "Process";
+                processCheck.setThredStatus(true, "Process");
+                processStart(paths[5]);
             }
 
         }
-
         private void openWorkStaitLog(object sender, EventArgs e)
         {
             if (locks == false && type == "")
             {
-                processStart(paths[5]);
+
+                
                 locks = true;
                 type = "WorkStait";
-            }
-
-        }
-
-        private void openUserLog(object sender, EventArgs e)
-        {
-            if (locks == false && type == "")
-            {
                 processStart(paths[5]);
-                locks = true;
-                type = "User";
+
             }
 
         }
+
     }
 }

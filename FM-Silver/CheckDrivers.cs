@@ -32,9 +32,7 @@ namespace FM_Silver
             }
             return driveStats;
         }
-
-
-        public bool getCheckReference(string name)
+        public bool getCheckReference(string name)//Вывод проверки на существование.
         {
             bool check = false;
             foreach (DriveInfo dr in DriveInfo.GetDrives())
@@ -47,8 +45,8 @@ namespace FM_Silver
 
             }
             return check;
-        } //Вывод проверки на существование.
-        public bool getCheckDriver(string name)
+        } 
+        public bool getCheckDriver(string name)//Проверка переданного объекта на соответствие диску.
         {
             bool check = false;
             foreach (DriveInfo dr in DriveInfo.GetDrives())
@@ -60,10 +58,8 @@ namespace FM_Silver
                 }
             }
             return check;
-        }//Проверка переданного объекта на соответствие диску.
-       
-
-        public void getInfo(string path)
+        }
+        public void getInfo(string path)//Вывод информации о диске.
         {
                     double TotalSize = Math.Round(new DriveInfo(path).TotalSize/Math.Pow(2,30),2);
                     double TotalFreeSpace = Math.Round(new DriveInfo(path).TotalFreeSpace / Math.Pow(2, 30), 2);
@@ -76,12 +72,12 @@ namespace FM_Silver
                         "Объём памяти: " + TotalSize + "\n" +
                         "Объём свободной памяти: " + TotalFreeSpace + "\n" +
                         "Объём занятой памяти: " + Math.Round(TotalSize - TotalFreeSpace,2));
-        } //Вывод информации о диске.
-        public string getPath(string name)
+        } 
+        public string getPath(string name)//Определение пути к диску.
         {
             return new DriveInfo(name).RootDirectory.ToString();
-        } //Определение пути к диску.
-        public string getType(string name)
+        } 
+        public string getType(string name)//Возвращает тип диска, переданного в метод.
         {
             string type = "";
             foreach(DriveInfo dr in DriveInfo.GetDrives())
@@ -92,7 +88,7 @@ namespace FM_Silver
                 }
             }
             return type;
-        }//Возвращает тип диска, переданного в метод.
+        }
     
     }
 }
