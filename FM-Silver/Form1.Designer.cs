@@ -65,6 +65,9 @@
             this.toolWrokStaitLog = new System.Windows.Forms.ToolStripMenuItem();
             this.toolCloseThread = new System.Windows.Forms.ToolStripMenuItem();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.toolTerminals = new System.Windows.Forms.ToolStripDropDownButton();
+            this.toolWT = new System.Windows.Forms.ToolStripMenuItem();
+            this.toolLT = new System.Windows.Forms.ToolStripMenuItem();
             this.contextMenuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.SuspendLayout();
@@ -261,7 +264,8 @@
             this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripDropDownButton1,
             this.toolStripDropDownButton2,
-            this.toolReadLogs});
+            this.toolReadLogs,
+            this.toolTerminals});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
             this.toolStrip1.Size = new System.Drawing.Size(583, 25);
@@ -374,6 +378,32 @@
             // 
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // toolTerminals
+            // 
+            this.toolTerminals.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.toolTerminals.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolWT,
+            this.toolLT});
+            this.toolTerminals.Image = ((System.Drawing.Image)(resources.GetObject("toolTerminals.Image")));
+            this.toolTerminals.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.toolTerminals.Name = "toolTerminals";
+            this.toolTerminals.Size = new System.Drawing.Size(84, 22);
+            this.toolTerminals.Text = "Терминалы";
+            // 
+            // toolWT
+            // 
+            this.toolWT.Name = "toolWT";
+            this.toolWT.Size = new System.Drawing.Size(180, 22);
+            this.toolWT.Text = "WindowsTerminal";
+            this.toolWT.Click += new System.EventHandler(this.toolWT_Click);
+            // 
+            // toolLT
+            // 
+            this.toolLT.Name = "toolLT";
+            this.toolLT.Size = new System.Drawing.Size(180, 22);
+            this.toolLT.Text = "LinuxTerminal";
+            this.toolLT.Click += new System.EventHandler(this.toolLT_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
@@ -435,5 +465,8 @@
         private ToolStripMenuItem toolCloseThread;
         private ToolStripMenuItem toolWrokStaitLog;
         private System.Windows.Forms.Timer timer1;
+        private ToolStripDropDownButton toolTerminals;
+        private ToolStripMenuItem toolWT;
+        private ToolStripMenuItem toolLT;
     }
 }

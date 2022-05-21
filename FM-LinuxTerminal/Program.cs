@@ -42,9 +42,9 @@ while (true)
         case "net":
             Console.WriteLine("-------------------------------------------------------------------------------");
             Console.WriteLine("Введите название команды из списка доступных:\n" +
-                "ip - Вывод привязанных хостов к указанному IP, вывод привязанных IP к указанному хосту.\n" +
+                "host - Вывод привязанных IP к указанному хосту.\n" +
                 "ping - Проверка скорости передачи пакетов данных.\n" +
-                "gmac - Вывод MAC-Адресов, используемых ПК.");
+                "nslookup - Вывод полной информации о выбраном хосте.");
             Console.WriteLine("-------------------------------------------------------------------------------");
             break;
         case "lsblk":
@@ -446,7 +446,6 @@ while (true)
                         Console.WriteLine("Server: " + ip.ToString());
                         Console.WriteLine("Address: " + ip.Address.ToString());
                         Console.WriteLine("AddressFamily: " + ip.AddressFamily);
-                        Console.WriteLine("ScopeId: " + ip.ScopeId);
                         Console.WriteLine("------------------------------------");
                     }
                 }

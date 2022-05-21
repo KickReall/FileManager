@@ -8,7 +8,7 @@ namespace FM_Silver
         CheckDrivers drivers = new CheckDrivers(); //создание экземпляра объекта, хранящего методы для взаимодействия с дисками
         CheckDirectory directory = new CheckDirectory(); // создание экземпляра объекта, хранящего методы для взаимодействия с директориями и файлами.
         WMIChecking processCheck; // создание объекта, хранящего методы для проверки информации о подключаемых и отключаемых устройствах.
-        string[] paths = new string[6]; //массив, хранящий пути к файлам папки Documentation
+        string[] paths = new string[8]; //массив, хранящий пути к файлам папки Documentation
         string[] ccPaths = new string[2] { "", "" };//массив хранящий пути к вырезаемым/копируемым файлам и папкам
         bool[] cc = new bool[2] { false, false };//массив хранящий статутсы вырезания/копирования (true, false)
         string[] main = { "System", "FM-Silver", "Корзина", "Документы", "Изображения" };//массив запрещённых имён папок и файлов
@@ -767,6 +767,34 @@ namespace FM_Silver
                                     break;
                                 }
                             }
+                            else if (paths[6] == null)
+                            {
+                                if ((dir.Name == "FM-Silver" && new DirectoryInfo(text).Name != "FM-Silver") || dir.Name == "System" || dir.Name == "FM-CONSOLE" || dir.Name == "bin" || dir.Name == "Debug" || dir.Name == "net6.0")
+                                {
+                                    text = dir.FullName;
+                                    break;
+                                }
+                                if (dir.Name == "FM-CONSOLE.exe")
+                                {
+                                    paths[6] = dir.FullName;
+                                    stop = false;
+                                    break;
+                                }
+                            }
+                            else if (paths[7] == null)
+                            {
+                                if ((dir.Name == "FM-Silver" && new DirectoryInfo(text).Name != "FM-Silver") || dir.Name == "System" || dir.Name == "FM-LinuxTerminal" || dir.Name == "bin" || dir.Name == "Debug" || dir.Name == "net6.0")
+                                {
+                                    text = dir.FullName;
+                                    break;
+                                }
+                                if (dir.Name == "FM-LinuxTerminal.exe")
+                                {
+                                    paths[7] = dir.FullName;
+                                    stop = false;
+                                    break;
+                                }
+                            }
                         }
                         if (text == dr)
                         {
@@ -774,7 +802,7 @@ namespace FM_Silver
                         }
                     }
                 }
-                if (paths[5] != null)
+                if (paths[7] != null)
                 {
                     break;
                 }
@@ -1302,5 +1330,14 @@ namespace FM_Silver
 
         }
 
+        private void toolWT_Click(object sender, EventArgs e)
+        {
+            processStart(paths[6]);
+        }
+
+        private void toolLT_Click(object sender, EventArgs e)
+        {
+            processStart(paths[7]);
+        }
     }
 }
